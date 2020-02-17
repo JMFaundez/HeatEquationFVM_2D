@@ -5,7 +5,7 @@ function [X,Y,Q] = solver(m,n,nt,s)
     Ly = 1;
     dx = Lx/m;
     dy = Ly/n;
-    tf = 2;
+    tf = 1;
     dt = tf/nt;
 
     x = linspace(0,Lx,m+1);
@@ -29,16 +29,16 @@ function [X,Y,Q] = solver(m,n,nt,s)
     In = sparse(eye(n));
     Im = sparse(eye(m));
     e = ones(m,1);
-    Tx = spdiags([e 2*e e],[-1 0 1],m,m);
+    Tx = spdiags([e -2*e e],[-1 0 1],m,m);
     Tx(1,1) = -1;
     Tx(m,m) = -1;
-    Txf = full(Tx);
+    %Txf = full(Tx);
 
     e = ones(n,1);
-    Ty = spdiags([e 2*e e],[-1 0 1],n,n);
+    Ty = spdiags([e -2*e e],[-1 0 1],n,n);
     Ty(1,1) = -1;
     Ty(n,n) = -1;
-    Tyf = full(Ty);
+    %Tyf = full(Ty);
 
     A = -dt*(kron(In',Tx) + kron(Ty',Im)) + kron(In',Im);
     [L,U,P] = lu(A);
