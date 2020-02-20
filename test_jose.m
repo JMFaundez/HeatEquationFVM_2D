@@ -1,7 +1,7 @@
 clear all; close all
 m = 40;
-Nt = 80;
-source = 2;
+Nt = 100;
+source = 1;
 
 [X,Y,Q] = solver(m,m,Nt,source);
 [X,Y,Q2] = solverLU(m,m,Nt,source);
@@ -29,12 +29,21 @@ ylabel('Absolute Error')
 legend('Previous solver','Fixed by Sophia' )
 hold off
 
-Qm = Q(:,Nt);
+Qm = Q(:,70);
 figure()
 surf(X,Y,reshape(Qm,m,m))
-title('Previous Solver')
+title('N=70')
 
-Qm2 = Q2(:,Nt);
+Qm = Q(:,80);
 figure()
-surf(X,Y,reshape(Qm2,m,m))
-title('Fixed by Sophia')
+surf(X,Y,reshape(Qm,m,m))
+title('N=80')
+
+Qm = Q(:,90);
+figure()
+surf(X,Y,reshape(Qm,m,m))
+title('N=90')
+%Qm2 = Q2(:,Nt/2);
+%figure()
+%surf(X,Y,reshape(Qm2,m,m))
+%title('Fixed by Sophia')
