@@ -1,6 +1,5 @@
-
 clear all; close all
-m = 81;
+m = 40;
 Nt = 80;
 source = 2;
 

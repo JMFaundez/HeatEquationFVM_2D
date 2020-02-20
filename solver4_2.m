@@ -1,4 +1,4 @@
-function [X,Y,Q] = solver4_1(m,n,nt,s,alpha)
+function [X,Y,Q] = solver4_2(m,n,nt,s)
     %UNTITLED2 Summary of this function goes here
     %   Detailed explanation goes here
     Lx = 1;
@@ -19,11 +19,6 @@ function [X,Y,Q] = solver4_1(m,n,nt,s,alpha)
         S1 = @(x,y) exp(-((x-0.5)^2+(y-0.5)^2)/0.2^2);
         S = arrayfun(S1,X,Y);
         S = reshape (S,m*n,1);
-    elseif s==3
-        S3 = source3(X,Y,alpha);
-        S = 2*reshape(S2,m*n,1);
-        S3 = zeros(m*n,1);
-   
     else 
         S2 = source2(X,Y);
         S = 2*reshape(S2,m*n,1);
@@ -33,44 +28,48 @@ function [X,Y,Q] = solver4_1(m,n,nt,s,alpha)
 
     In = sparse(eye(n));
     Im = sparse(eye(m));
-    
-    %example for smooth and positive function a(y)
-    a = @(y) 100*y^2;
-    af = arrayfun(a,Y(:,1));
-    A = sparse(diag(af));
-    %example for smooth and positive function b(x)
-    b = @(x) x^2;
-    bf = arrayfun(b,X(1,:));
-    B = sparse(diag(bf));
-    
     e = ones(m,1);
     Tx = spdiags([e -2*e e],[-1 0 1],m,m);
     Tx(1,1) = -1;
     Tx(m,m) = -1;
     %Txf = full(Tx);
 
+    C = zeros(m,n);
+    C(1,:) = 1;
+    C(end,:) = -1;
+    C = reshape(C./dx,m*n,1);
+
     e = ones(n,1);
     Ty = spdiags([e -2*e e],[-1 0 1],n,n);
-    Ty(1,1) = -1;
-    Ty(n,n) = -1;
+    Ty(1,1) = -3;
+    Ty(n,n) = -3;
     %Tyf = full(Ty);
 
-    M = -dt*(kron(A',Tx) + kron(Ty',B)) + kron(In',Im);
-    [L,U,P] = lu(M);
+    D = zeros(m,n);
+    %q0 = sin(pi*xm)/pi;
+    %q1 = sin(3*pi*xm)/(3*pi) + 1;
+    f = (sin(pi*xm)/pi);
+    g = (sin(3*pi*xm))/(3*pi)+1;
+    D(:,1) = f;
+    D(:,n) = g;
+    D = reshape(D*2/dy^2,m*n,1);
+    G = C + D + S;
+
+    A = -dt*(kron(In',Tx) + kron(Ty',Im)) + kron(In',Im);
+    [L,U,P] = lu(A);
 
     Q = zeros(n*m,nt);
     b = zeros(n*m,1);
 
     for t = 2:nt
         if (s==2) && (t*dt>=0.25)
-            S = S3;
-        elseif (s==3) && (t*dt>=0.25)
-            S = S3;    
+          S = S3;
+          G = C + B + S;
         end
-       
-        b = Q(:,t-1) + dt*S;
+            
+        b = Q(:,t-1) + dt*G;
         Q(:,t) = U\(L\(P*b));
-
+       
     end
 end
 
