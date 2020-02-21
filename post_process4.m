@@ -27,8 +27,10 @@ t = linspace(0,1,Nt(end));
 Qa = t.*pi*0.2^2*(erf(0.5/0.2))^2;
 Qt = Qt./(m(end)^2);
 figure()
-semilogy(t,(Qt-Qa)./Qa)
-
+plot(t,100*abs((Qa-Qt)./Qa),'LineWidth',2)
+ylabel('Relative Error %')
+xlabel('time')
+saveas(gcf,'p4_1cons.png')
 
 dr = 1./m;
 dt = 1./Nt;

@@ -1,11 +1,19 @@
 function [X,Y,Q] = solver4_2(m,n,nt,s)
-    %UNTITLED2 Summary of this function goes here
-    %   Detailed explanation goes here
+    %Solver of heat equation in 2D for structured mesh with non
+    % homogeneous boundary condition.
+    %   Input:
+    %       m: number of elements in x direction
+    %       n: number of elements in y direction
+    %       nt: number of time steps
+    %       s: Source term (1 or 2)
+    %   Output:
+    %       X,Y: Mesh grid
+    %       Q: Solution in matrix form (m*n,nt)
     Lx = 1;
     Ly = 1;
     dx = Lx/m;
     dy = Ly/n;
-    tf = 0.5;
+    tf = 1;
     dt = tf/nt;
     xm = linspace(dx/2,Lx-dx/2,m);
     ym = linspace(dy,Ly-dy,n);
@@ -28,7 +36,6 @@ function [X,Y,Q] = solver4_2(m,n,nt,s)
     Tx(1,1) = -1;
     Tx(m,m) = -1;
     Tx = Tx/dx^2;
-    %Txf = full(Tx);
 
     C = zeros(m,n);
     C(1,:) = 1;
@@ -40,7 +47,6 @@ function [X,Y,Q] = solver4_2(m,n,nt,s)
     Ty(1,1) = -2;
     Ty(n,n) = -2;
     Ty = Ty/dy^2;
-    %Tyf = full(Ty)
 
     D = zeros(m,n);
     q0 =  sin(pi*xm)/pi;
@@ -61,9 +67,7 @@ function [X,Y,Q] = solver4_2(m,n,nt,s)
           S = S3;
           G = C + D + S;
         end
-            
         b = Q(:,t-1) + dt*G;
         Q(:,t) = U\(L\(P*b));
-       
     end
 end

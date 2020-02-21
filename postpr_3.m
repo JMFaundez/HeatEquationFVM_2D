@@ -28,11 +28,14 @@ if source ==1
   Qa = t.*pi*0.2^2*(erf(0.5/0.2))^2;
 elseif source ==2
   Qa = 2*t;
-  Qa(t>0.25)=2*0.25;
+  Qa(t>=0.25)=2*0.25;
 end
 Qt = Qt./(m(end)^2);
 figure()
-semilogy(t,abs((Qa-Qt)./Qa))
+plot(t,100*abs((Qa-Qt)./Qa),'LineWidth',2)
+ylabel('Relative Error %')
+xlabel('time')
+saveas(gcf,'p3_s2.png')
 
 dr = 1./m;
 dt = 1./Nt;

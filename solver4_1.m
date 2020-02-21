@@ -1,15 +1,20 @@
 function [X,Y,Q] = solver4_1(m,n,nt,s)
-    %UNTITLED2 Summary of this function goes here
-    %   Detailed explanation goes here
+    %Solver of heat equation in 2D for structured mesh with variable
+    % coefficients.
+    %   Input:
+    %       m: number of elements in x direction
+    %       n: number of elements in y direction
+    %       nt: number of time steps
+    %       s: Source term (1 or 2)
+    %   Output:
+    %       X,Y: Mesh grid
+    %       Q: Solution in matrix form (m*n,nt)
     Lx = 1;
     Ly = 1;
     dx = Lx/m;
     dy = Ly/n;
     tf = 1;
     dt = tf/nt;
-
-    x = linspace(0,Lx,m+1);
-    y = linspace(0,Ly,n+1);
 
     xm = linspace(dx/2,Lx-dx/2,m);
     ym = linspace(dy/2,Ly-dy/2,n);
@@ -44,14 +49,12 @@ function [X,Y,Q] = solver4_1(m,n,nt,s)
     Tx(1,1) = -1;
     Tx(m,m) = -1;
     Tx = Tx/dx^2;
-    %Txf = full(Tx);
 
     e = ones(n,1);
     Ty = spdiags([e -2*e e],[-1 0 1],n,n);
     Ty(1,1) = -1;
     Ty(n,n) = -1;
     Ty = Ty/dy^2;
-    %Tyf = full(Ty);
 
     M = -dt*(kron(A',Tx) + kron(Ty',B)) + kron(In',Im);
     [L,U,P] = lu(M);
@@ -63,10 +66,8 @@ function [X,Y,Q] = solver4_1(m,n,nt,s)
         if (s==2) && (t*dt>=0.25)
             S = S3;
         end
-       
         b = Q(:,t-1) + dt*S;
         Q(:,t) = U\(L\(P*b));
-
     end
 end
 
