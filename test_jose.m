@@ -1,13 +1,11 @@
 clear all; close all
-m = 40;
-Nt = 100;
-source = 1;
+m = 50;
+Nt = 80;
+source = 2;
 
 [X,Y,Q] = solver(m,m,Nt,source);
-[X,Y,Q2] = solverLU(m,m,Nt,source);
 
 Qs = sum(Q,1);
-Qs2 = sum(Q2,1);
 
 t = linspace(0,1,Nt);
 if source ==1
@@ -18,21 +16,17 @@ elseif source ==2
 end
 
 Qs = Qs./(m^2);
-Qs2 = Qs2./(m^2);
 
 figure()
-semilogy(t,abs(Qa-Qs))
-hold on
-semilogy(t,abs(Qa-Qs2))
+semilogy(t,abs(Qa-Qs)./abs(Qa))
 xlabel('time')
 ylabel('Absolute Error')
-legend('Previous solver','Fixed by Sophia' )
 hold off
 
-Qm = Q(:,70);
+Qm = Q(:,10);
 figure()
 surf(X,Y,reshape(Qm,m,m))
-title('N=70')
+title('N=10')
 
 Qm = Q(:,80);
 figure()

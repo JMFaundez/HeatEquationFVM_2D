@@ -8,9 +8,6 @@ function [X,Y,Q] = solver(m,n,nt,s)
     tf = 1;
     dt = tf/nt;
 
-    x = linspace(0,Lx,m+1);
-    y = linspace(0,Ly,n+1);
-
     xm = linspace(dx/2,Lx-dx/2,m);
     ym = linspace(dy/2,Ly-dy/2,n);
 
@@ -32,12 +29,14 @@ function [X,Y,Q] = solver(m,n,nt,s)
     Tx = spdiags([e -2*e e],[-1 0 1],m,m);
     Tx(1,1) = -1;
     Tx(m,m) = -1;
+    Tx = Tx/dx^2;
     %Txf = full(Tx);
 
     e = ones(n,1);
     Ty = spdiags([e -2*e e],[-1 0 1],n,n);
     Ty(1,1) = -1;
     Ty(n,n) = -1;
+    Ty = Ty/dy^2;
     %Tyf = full(Ty);
 
     A = -dt*(kron(In',Tx) + kron(Ty',Im)) + kron(In',Im);

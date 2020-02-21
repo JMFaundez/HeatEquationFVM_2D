@@ -12,7 +12,7 @@ function [X,Y,Q] = solver4_2(m,n,nt,s)
 
     [X,Y] = meshgrid(xm,ym);
     if s==1
-        S1 = @(x,y) exp(-((x-0.5)^2+(y-0.5)^2)/0.2^2);
+        S1 = @(x,y) 10*exp(-((x-0.5)^2+(y-0.5)^2)/0.2^2);
         S = arrayfun(S1,X,Y);
         S = reshape (S',m*n,1);
     else
