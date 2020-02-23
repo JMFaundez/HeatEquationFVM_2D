@@ -13,7 +13,7 @@ surf(X,Y,reshape(Qm,m,m))
 title('Previous Solver')
 Qp = Qm;
 
-[X,Y,Q] = solver4_2(m,m,Nt,source);
+[X,Y,Q] = solver4_1(m,m,Nt,source);
 
 Qs2 = sum(Q,1)
 

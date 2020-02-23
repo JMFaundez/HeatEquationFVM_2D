@@ -32,12 +32,14 @@ function [X,Y,Q] = solver(m,n,nt,s)
     Tx = spdiags([e -2*e e],[-1 0 1],m,m);
     Tx(1,1) = -1;
     Tx(m,m) = -1;
+    Tx = Tx/dx^2;
     %Txf = full(Tx);
 
     e = ones(n,1);
     Ty = spdiags([e -2*e e],[-1 0 1],n,n);
     Ty(1,1) = -1;
     Ty(n,n) = -1;
+    Ty = Ty/dy^2;
     %Tyf = full(Ty);
 
     A = -dt*(kron(In',Tx) + kron(Ty',Im)) + kron(In',Im);

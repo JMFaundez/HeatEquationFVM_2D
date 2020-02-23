@@ -1,4 +1,4 @@
-clear all
+clear all; close all;
 m = 20;
 n = 20;
 Lx = 1;
